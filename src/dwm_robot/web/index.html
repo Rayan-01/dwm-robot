@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <title>DWM Robot</title>
+        <link rel="stylesheet" href="/style.css" />
+    </head>
+    <body>
+        <header>
+            <div>
+                <span class="eyebrow">DWM • ROBOT CONTROL</span>
+                <h1>DWM Robot</h1>
+                <a href="/navigation" style="color: #72d9cc"
+                    >Waypoints & lidar</a
+                >
+            </div>
+            <span id="connection" class="badge">Disconnected</span>
+        </header>
+        <main>
+            <section class="login card">
+                <button id="connect" hidden>Connect controls</button
+                ><span id="notice" role="status"
+                    >Choose Auto detect, Enable manual or Brush on. Connection
+                    is automatic.</span
+                >
+            </section>
+            <div class="layout">
+                <section class="card camera">
+                    <div class="section-head">
+                        <h2>Live detection</h2>
+                        <span id="fps">— FPS</span>
+                    </div>
+                    <div class="view">
+                        <img
+                            id="feed"
+                            alt="Live OAK camera with tracked targets"
+                        />
+                        <div id="no-feed">Waiting for camera</div>
+                    </div>
+                    <div class="camera-foot">
+                        <span id="runmode">—</span
+                        ><span
+                            >Green: current target · Yellow: last observation ·
+                            Possible poop: dark grass fallback</span
+                        >
+                    </div>
+                </section>
+                <section class="card depth-panel" id="depth-panel" hidden>
+                    <div class="section-head">
+                        <h2>OAK depth view</h2>
+                        <span id="depth-status">Waiting for depth</span>
+                    </div>
+                    <div class="view">
+                        <img id="depth-feed" alt="Aligned OAK depth map" />
+                    </div>
+                    <p class="hint">
+                        Warm colours: nearer · Cool colours: farther (scale
+                        capped at 3 m) · Black: unavailable depth
+                    </p>
+                </section>
+                <section class="card controls">
+                    <div class="section-head">
+                        <h2>Robot controls</h2>
+                        <span class="badge" id="phase">STOPPED</span>
+                    </div>
+                    <button id="stop" class="stop">
+                        STOP ROBOT + BRUSH<span>Latched stop · Space key</span>
+                    </button>
+                    <p id="reason">Choose an action when the area is clear.</p>
+                    <p id="link-health" class="hint">
+                        Arduino connection diagnostics appear here.
+                    </p>
+                    <p id="motor-status" class="hint"></p>
+                    <button id="clear-fault" hidden>Clear motor fault</button>
+                    <div class="mode-buttons">
+                        <button id="auto" class="primary">
+                            Auto detect + pass + clean
+                        </button>
+                    </div>
+                    <label
+                        >Start forward pass at camera distance (cm)<input
+                            id="stop-distance"
+                            type="number"
+                            value="45"
+                            min="45"
+                            max="300"
+                            step="0.5" /></label
+                    ><label
+                        >Forward pass length (m)<input
+                            id="forward-pass-distance"
+                            type="number"
+                            value="1"
+                            min="0"
+                            max="1"
+                            step="0.1" /></label
+                    ><label class="check"
+                        ><input
+                            id="clean-after-pass"
+                            type="checkbox"
+                            checked
+                        />Wait 2 seconds after drive wheels stop, then clean for
+                        20 seconds</label
+                    >
+                    <p id="cleaning-status" class="hint"></p>
+                    <p class="hint">
+                        0 disables the pass. Travel is estimated from FG RPM;
+                        calibration is not verified. Keep the forward path
+                        clear. 45-300 cm from the camera. Front-edge gaps of 1
+                        cm, 0.5 cm or negative values need calibration.
+                        Approaches continuously toward the selected camera
+                        distance. Missing target/depth pauses the wheels while a
+                        visible target is confirmed again with fresh depth.
+                        Filtered FG noise does not cancel camera approach. When
+                        close and centred, stops for 1 second, then starts the
+                        brush and the selected forward pass. After the pass, the
+                        brush stops while the wheels settle for 2 seconds, then
+                        runs for 20 seconds when enabled. No blind search.
+                    </p>
+                    <div class="manual-controls">
+                        <button id="manual" disabled>Enable manual</button>
+                        <p class="hint">
+                            Hold a direction to move. Release to stop wheels.
+                        </p>
+                        <div class="drive">
+                            <button data-direction="forward" class="up">
+                                ↑<small>Forward</small></button
+                            ><button data-direction="left" class="left">
+                                ←<small>Left</small></button
+                            ><button data-direction="stop" class="middle">
+                                ■<small>Wheels stop</small></button
+                            ><button data-direction="right" class="right">
+                                →<small>Right</small></button
+                            ><button data-direction="reverse" class="down">
+                                ↓<small>Reverse</small>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="brush-buttons">
+                        <button id="brush-on">Brush on</button
+                        ><button id="brush-off">Brush off</button>
+                    </div>
+                    <p class="hint">
+                        Brush on stops wheel movement first. Stop turns both
+                        wheels and brush off.
+                    </p>
+                </section>
+            </div>
+            <section class="metrics">
+                <div class="card">
+                    <span>Locked target</span><strong id="target">—</strong>
+                </div>
+                <div class="card">
+                    <span>Drive motor RPM · before gearbox</span
+                    ><strong id="motor-rpm">—</strong>
+                </div>
+                <div class="card">
+                    <span>Drive sprocket RPM · after gearbox</span
+                    ><strong id="wheels">—</strong>
+                </div>
+                <div class="card">
+                    <span>Brush command</span><strong id="brush">OFF</strong>
+                </div>
+                <div class="card">
+                    <span>Pass travel</span><strong id="travel">—</strong>
+                </div>
+                <div class="card">
+                    <span>Battery estimate</span><strong id="battery">—</strong>
+                </div>
+            </section>
+            <p id="rpm-note" class="hint">
+                Motor RPM is estimated from FG pulses. Calibration not yet
+                verified.
+            </p>
+            <section class="card">
+                <p id="sensor-status">Waiting for camera</p>
+                <p id="target-distances">Waiting for detections</p>
+            </section>
+            <section class="card imu-panel">
+                <div class="section-head">
+                    <h2>IMU · BNO055</h2>
+                    <span id="imu-status" class="badge"
+                        >Waiting for sensor</span
+                    >
+                </div>
+                <div class="fields">
+                    <div>
+                        <label>Orientation · roll / pitch / yaw (°)</label
+                        ><strong id="imu-orientation">—</strong>
+                    </div>
+                    <div>
+                        <label>Angular velocity · X / Y / Z (rad/s)</label
+                        ><strong id="imu-gyro">—</strong>
+                    </div>
+                    <div>
+                        <label>Linear acceleration · X / Y / Z (m/s²)</label
+                        ><strong id="imu-acceleration">—</strong>
+                    </div>
+                </div>
+                <p class="hint" id="imu-note">
+                    Orientation follows the sensor mounting axes.
+                </p>
+            </section>
+            <details class="card setup">
+                <summary>
+                    Setup & ground calibration
+                    <span id="ready">Required before auto clean</span>
+                </summary>
+                <div class="setup-content">
+                    <p>
+                        Use the drive axle centre as the origin. Forward is +Y,
+                        right is +X. Enter centimetres. Measure the
+                        <b>drive sprocket pitch diameter</b>, not the overall
+                        rubber track length.
+                    </p>
+                    <div class="fields">
+                        <label
+                            >Sprocket diameter (cm)<input
+                                id="wheel_diameter_m"
+                                type="number"
+                                min="1"
+                                step="0.1" /></label
+                        ><label
+                            >Axle → rear brush contact (cm)<input
+                                id="axle_to_brush_m"
+                                type="number"
+                                min="1"
+                                step="0.1" /></label
+                        ><label
+                            >Effective brush width (cm)<input
+                                id="brush_width_m"
+                                type="number"
+                                min="1"
+                                step="0.1" /></label
+                        ><label
+                            >Odometry correction factor<input
+                                id="wheel_scale"
+                                type="number"
+                                min="0.1"
+                                step="0.01" /></label
+                        ><label
+                            >Pass starts at distance (cm)<input
+                                id="pass_trigger_m"
+                                type="number"
+                                min="5"
+                                step="1" /></label
+                        ><label
+                            >Extra collection travel (cm)<input
+                                id="brush_margin_m"
+                                type="number"
+                                min="1"
+                                step="1" /></label
+                        ><label
+                            >Manual PWM<input
+                                id="manual_pwm"
+                                type="number"
+                                min="1"
+                                max="90" /></label
+                        ><label
+                            >Approach PWM<input
+                                id="approach_pwm"
+                                type="number"
+                                min="1"
+                                max="90" /></label
+                        ><label
+                            >Cleaning PWM<input
+                                id="clean_pwm"
+                                type="number"
+                                min="1"
+                                max="90" /></label
+                        ><label
+                            >Turning PWM<input
+                                id="turn_pwm"
+                                type="number"
+                                min="1"
+                                max="90"
+                        /></label>
+                    </div>
+                    <label class="check"
+                        ><input type="checkbox" id="geometry_verified" />I
+                        verified wheel directions, relay on/off, ground
+                        distance, measured travel, and clearance for the forward
+                        pass. Camera mounting is fixed.</label
+                    ><button id="save-settings">Save measurements</button>
+                    <hr />
+                    <h3>Map the image to the ground</h3>
+                    <p>
+                        Put four tape markers on a flat surface, forming a
+                        rectangle centred on the robot centreline. Measure
+                        near/far distances from the drive axle. The rectangle
+                        must include the pass-start distance and the target's
+                        path.
+                    </p>
+                    <div class="fields">
+                        <label
+                            >Rectangle width (cm)<input
+                                id="cal-width"
+                                type="number"
+                                value="60"
+                                min="10" /></label
+                        ><label
+                            >Near edge from axle (cm)<input
+                                id="cal-near"
+                                type="number"
+                                value="20"
+                                min="1" /></label
+                        ><label
+                            >Far edge from axle (cm)<input
+                                id="cal-far"
+                                type="number"
+                                value="150"
+                                min="2"
+                        /></label>
+                    </div>
+                    <div class="mode-buttons">
+                        <button id="freeze">Capture calibration image</button
+                        ><button id="clear-points">Clear clicks</button
+                        ><button id="save-cal">Save ground calibration</button>
+                    </div>
+                    <p id="cal-instruction">
+                        Click: 1 far-left → 2 far-right → 3 near-right → 4
+                        near-left.
+                    </p>
+                    <canvas id="calibration" width="640" height="480"></canvas>
+                    <p class="hint">
+                        Saving a new ground calibration clears the verification
+                        checkbox. Verify again with a ruler and a harmless test
+                        object.
+                    </p>
+                </div>
+            </details>
+            <p class="footnote">
+                Keep this dashboard visible during motion. Camera, inference,
+                Arduino, or browser loss stops the robot. Wheel commands and
+                relay status are software indications. This system has no
+                obstacle avoidance.
+            </p>
+        </main>
+        <script src="/app.js"></script>
+    </body>
+</html>

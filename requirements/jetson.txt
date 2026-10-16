@@ -1,0 +1,17 @@
+# PyTorch and Torchvision MUST be installed for the actual JetPack version first.
+# Preserve the existing JetPack environment; do not install generic torch wheels.
+ultralytics==8.4.164
+pyserial==3.5
+PyYAML>=5.3.1
+requests>=2.23
+numpy>=1.23,<2
+matplotlib>=3.3,<3.10
+scipy>=1.4
+pillow>=7.1
+psutil>=5.8
+lap>=0.5.12
+polars>=0.20
+ultralytics-thop>=2.0.18
+
+# OAK pipeline uses DepthAI v2 APIs.
+depthai>=2.24,<3

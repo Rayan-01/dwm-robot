@@ -1,0 +1,39 @@
+{
+  "architecture": "YOLO26n",
+  "class_names": {
+    "0": "dog_poop"
+  },
+  "input_size": 640,
+  "training_epochs_recorded": 92,
+  "best_recorded_validation_row": {
+    "epoch": "62",
+    "time": "2002.86",
+    "train/box_loss": "0.67689",
+    "train/cls_loss": "0.29098",
+    "train/l1_loss": "0.00115",
+    "metrics/precision(B)": "0.92049",
+    "metrics/recall(B)": "0.81818",
+    "metrics/mAP50(B)": "0.88437",
+    "metrics/mAP50-95(B)": "0.76505",
+    "val/box_loss": "0.63015",
+    "val/cls_loss": "0.68238",
+    "val/l1_loss": "0.00178",
+    "lr/pg0": "0.0011948",
+    "lr/pg1": "0.0011948",
+    "lr/pg2": "0.0011948"
+  },
+  "artifacts": {
+    "best-v2.pt": {
+      "bytes": 5369349,
+      "sha256": "6649b0b3b152767a573edd3119324821e9e6c972f0528c0f157161a0273bd407"
+    }
+  },
+  "note": "Metrics are from the supplied training CSV, not a new evaluation.",
+  "training_evidence": [
+    "args.yaml",
+    "results.csv",
+    "results.png",
+    "BoxPR_curve.png",
+    "confusion_matrix_normalized.png"
+  ]
+}

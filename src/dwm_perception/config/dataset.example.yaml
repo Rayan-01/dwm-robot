@@ -1,0 +1,6 @@
+# Set path to the dataset root before training. Dataset images are not bundled.
+path: /absolute/path/to/dog_poop_dataset
+train: images/train
+val: images/val
+names:
+  0: dog_poop

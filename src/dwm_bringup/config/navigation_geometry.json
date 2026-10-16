@@ -1,0 +1,76 @@
+{
+  "version": 1,
+  "body_length_m": 0.9144,
+  "body_width_m": 0.508,
+  "collision_margin_m": 0.03,
+  "length_scope": "overall robot including the metal collection-frame extensions",
+  "overall_length_confirmed_by_annotated_photo": true,
+  "track_centre_spacing_m": 0.4318,
+  "track_length_m": 0.5207,
+  "sprocket_diameter_m": 0.14,
+  "gear_ratio": 20,
+  "coordinate_frame": "body centre on floor; x forward, y left, z up",
+  "body_footprint_m": [
+    [
+      0.4572,
+      0.254
+    ],
+    [
+      0.4572,
+      -0.254
+    ],
+    [
+      -0.4572,
+      -0.254
+    ],
+    [
+      -0.4572,
+      0.254
+    ]
+  ],
+  "navigation_reference": "midpoint of the tracks on floor; x forward, y left, z up",
+  "track_front_matches_robot_front": true,
+  "track_centre_to_front_m": 0.26035,
+  "track_centre_to_rear_m": 0.65405,
+  "navigation_footprint_m": [
+    [
+      0.26035,
+      0.254
+    ],
+    [
+      0.26035,
+      -0.254
+    ],
+    [
+      -0.65405,
+      -0.254
+    ],
+    [
+      -0.65405,
+      0.254
+    ]
+  ],
+  "lidar": {
+    "behind_front_m": 0.3048,
+    "body_centre_x_m": 0.1524,
+    "body_centre_y_m": 0.0,
+    "track_centre_x_m": -0.04445,
+    "track_centre_y_m": 0.0,
+    "height_m": null,
+    "cable_facing": null,
+    "yaw_rad": 0.0
+  },
+  "camera": {
+    "behind_front_m": 0.0635,
+    "body_centre_x_m": 0.3937,
+    "body_centre_y_m": 0.0,
+    "track_centre_x_m": 0.19685,
+    "track_centre_y_m": 0.0,
+    "height_m": null,
+    "pitch_rad": null
+  },
+  "brush_protrusion_m": null,
+  "fg_pulses_per_motor_revolution_verified": false,
+  "mounting_complete": false,
+  "lidar_alignment_confirmed": true
+}

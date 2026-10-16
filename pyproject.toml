@@ -1,0 +1,7 @@
+[tool.black]
+line-length = 88
+target-version = ['py310']
+
+[tool.pytest.ini_options]
+testpaths = ['src/dwm_robot/test']
+pythonpath = ['src/dwm_core', 'src/dwm_perception', 'src/dwm_robot', 'src/dwm_navigation']

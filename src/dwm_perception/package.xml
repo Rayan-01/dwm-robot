@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>dwm_perception</name>
+  <version>0.2.0</version>
+  <description>OAK-D Pro capture and YOLO detection tooling.</description>
+  <maintainer email="rayanalamsiam2000@gmail.com">Rayan-01</maintainer>
+  <url type="repository">https://github.com/Rayan-01/dwm-robot</url>
+  <license>LicenseRef-Proprietary</license>
+  <buildtool_depend>ament_python</buildtool_depend>
+  <exec_depend>dwm_core</exec_depend>
+  <exec_depend>python3-numpy</exec_depend>
+  <exec_depend>python3-opencv</exec_depend>
+  <export><build_type>ament_python</build_type></export>
+</package>

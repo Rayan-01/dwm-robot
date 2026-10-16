@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <title>Robot waypoints</title>
+        <link rel="stylesheet" href="/style.css" />
+        <style>
+            .maps {
+                display: grid;
+                grid-template-columns: minmax(0, 2fr) minmax(250px, 1fr);
+                gap: 16px;
+            }
+            canvas {
+                display: block;
+                width: 100%;
+                background: #ddd;
+                border-radius: 10px;
+                touch-action: none;
+            }
+            #map {
+                height: 540px;
+                cursor: crosshair;
+            }
+            #laser {
+                height: 260px;
+                background: #122024;
+            }
+            .toolbar {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                align-items: center;
+                margin: 12px 0;
+            }
+            select {
+                padding: 10px;
+                background: #14262b;
+                color: #fff;
+                border: 1px solid #456;
+                border-radius: 8px;
+            }
+            #points {
+                padding-left: 24px;
+                max-height: 210px;
+                overflow: auto;
+            }
+            #points button {
+                padding: 3px 8px;
+                margin-left: 8px;
+            }
+            .hint {
+                line-height: 1.5;
+            }
+            a {
+                color: #72d9cc;
+            }
+            .legend {
+                display: flex;
+                gap: 16px;
+                flex-wrap: wrap;
+            }
+            @media (max-width: 800px) {
+                .maps {
+                    grid-template-columns: 1fr;
+                }
+                #map {
+                    height: 400px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <div>
+                <span class="eyebrow">DWM • ROUTE SETUP</span>
+                <h1>Robot waypoints</h1>
+            </div>
+            <a href="/camera">Camera & controls</a>
+        </header>
+        <main>
+            <section class="card">
+                <p id="status" role="status">Connecting to lidar…</p>
+                <p class="hint">
+                    Overall robot: 91.44 × 50.8 cm, including the rear
+                    collection frame. Keep this page visible while driving.
+                </p>
+            </section>
+            <section class="card">
+                <h2>Robot measurements</h2>
+                <p>
+                    Track centre spacing: <b>43.18 cm</b> · Track length:
+                    <b>52.07 cm</b>
+                </p>
+                <p>
+                    Lidar: centred, <b>30.48 cm behind the front edge</b>.
+                    Camera: centred, <b>6.35 cm behind the front edge</b>.
+                </p>
+                <p>
+                    From track centre: front edge <b>26.04 cm</b>, rear edge
+                    <b>65.41 cm</b>. The full rear collection frame is included.
+                </p>
+                <p class="hint">
+                    Geometry uses the track midpoint as the navigation
+                    reference. Wheel odometry is an estimate and needs measured
+                    travel calibration.
+                </p>
+            </section>
+            <section class="card">
+                <h2>Navigation heading</h2>
+                <p id="fusion-status">Waiting for IMU and wheel feedback…</p>
+                <p id="steering-status">
+                    Robot heading determines its left and right on the map.
+                </p>
+            </section>
+            <section class="card">
+                <p>
+                    Path planner: <b>A*</b> · Extra obstacle clearance:
+                    <b>3 cm</b>
+                </p>
+            </section>
+            <section class="card">
+                <h2>Map session</h2>
+                <div class="toolbar">
+                    <button id="mapping">Create new map</button
+                    ><input
+                        id="map-name"
+                        placeholder="New map name"
+                        aria-label="New map name"
+                    /><button id="save-map">Save map</button>
+                    <button id="load-nav">
+                        Load selected map for navigation</button
+                    ><button id="end-session">End map session</button>
+                </div>
+                <div class="toolbar">
+                    <button data-drive="forward">Hold forward</button
+                    ><button data-drive="back">Hold back</button
+                    ><button data-drive="left">Hold left</button
+                    ><button data-drive="right">Hold right</button>
+                </div>
+                <p class="hint">
+                    Create a map, then hold the controls to map the area. Save
+                    it, end the session, and load that map for navigation.
+                    Mapping controls use lidar clearance checks.
+                </p>
+            </section>
+            <div class="maps">
+                <section class="card">
+                    <h2>Waypoint map</h2>
+                    <div class="toolbar">
+                        <select id="maps" aria-label="Saved map">
+                            <option value="">Choose a saved map</option>
+                        </select>
+                        <button id="undo">Undo point</button
+                        ><button id="clear">Clear points</button
+                        ><button id="save">Save route</button>
+                    </div>
+                    <canvas
+                        id="map"
+                        aria-label="Click the map to add ordered waypoints"
+                    ></canvas>
+                    <p class="hint">
+                        Choose the map for this area. Click free space for
+                        waypoints in order. Wheel to zoom; drag to pan. Black
+                        dots are waypoints. The dashed orange line shows their
+                        order; it is not an obstacle-avoiding route.
+                    </p>
+                    <p class="legend">
+                        <span>● Black: waypoint</span
+                        ><span style="color: #f99c48"
+                            >Orange: order / live Nav2 plan when available</span
+                        >
+                    </p>
+                    <div class="toolbar">
+                        <button id="pose-mode">Set robot position on map</button
+                        ><label
+                            >Heading °
+                            <input
+                                id="pose-yaw"
+                                type="number"
+                                value="0"
+                                step="5"
+                                style="width: 80px" /></label
+                        ><button id="confirm-pose">
+                            Confirm robot & scan match map
+                        </button>
+                    </div>
+                    <p class="hint">
+                        Set the current track-centre position and heading: 0°
+                        faces right on the map; 90° faces up. Check the robot
+                        arrow and green lidar points match the room before
+                        confirming.
+                    </p>
+                    <p class="hint">
+                        Waypoint arrival headings follow the route. Map-left may
+                        be behind the robot: use the orange robot arrow to see
+                        where it faces. The solid orange planned path may detour
+                        around an obstacle.
+                    </p>
+                    <ol id="points"></ol>
+                    <button id="run" disabled>Run route</button>
+                    <button id="cancel">Stop robot</button>
+                    <p id="run-reason" role="status" class="hint">
+                        Checking navigation readiness…
+                    </p>
+                    <p class="hint">
+                        Nav2 plans around walls. An unreachable waypoint stops
+                        the route. The brush stays off during waypoint
+                        navigation; existing cleaning is available from Camera &
+                        controls.
+                    </p>
+                </section>
+                <section class="card">
+                    <h2>Live RPLidar S2</h2>
+                    <p id="laser-status">Waiting for scans</p>
+                    <canvas
+                        id="laser"
+                        aria-label="Live lidar points in sensor coordinates"
+                    ></canvas>
+                    <p class="hint">
+                        Top is robot forward; left is robot left. Verify known
+                        walls appear on the correct side. This is a 2D
+                        projection; lidar height is not measured.
+                    </p>
+                    <label
+                        >Lidar rotation relative to robot
+                        <select id="lidar-yaw">
+                            <option value="0">0°</option>
+                            <option value="90">90°</option>
+                            <option value="180">180°</option>
+                            <option value="-90">−90°</option>
+                        </select></label
+                    >
+                    <label
+                        ><input id="alignment-confirm" type="checkbox" />I
+                        checked lidar forward/left against the room</label
+                    ><button id="alignment">Apply lidar alignment</button>
+                    <h2>Live detection</h2>
+                    <img
+                        id="camera"
+                        alt="Poop detection camera"
+                        style="width: 100%; border-radius: 10px"
+                    />
+                    <p class="hint">
+                        Camera detections remain visible during navigation.
+                    </p>
+                </section>
+            </div>
+        </main>
+        <script src="/navigation.js"></script>
+    </body>
+</html>

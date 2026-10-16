@@ -1,0 +1,375 @@
+:root {
+    color-scheme: dark;
+    --bg: #0d1517;
+    --panel: #162125;
+    --line: #2b3b40;
+    --text: #e8eff0;
+    --muted: #a3b5bb;
+    --accent: #67e0b4;
+    --red: #e64650;
+}
+* {
+    box-sizing: border-box;
+}
+body {
+    margin: 0;
+    background: var(--bg);
+    font:
+        15px/1.5 system-ui,
+        sans-serif;
+    color: var(--text);
+}
+header,
+main {
+    max-width: 1280px;
+    margin: auto;
+    padding: 24px;
+}
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 12px;
+}
+h1 {
+    font-size: 30px;
+    letter-spacing: -0.8px;
+    margin: 4px 0;
+}
+h2 {
+    font-size: 17px;
+    margin: 0;
+}
+h3 {
+    font-size: 17px;
+}
+.eyebrow {
+    font-size: 11px;
+    letter-spacing: 1.6px;
+    color: var(--accent);
+}
+.card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 20px;
+}
+.badge {
+    font-size: 12px;
+    border-radius: 100px;
+    background: #24363c;
+    padding: 6px 12px;
+    white-space: nowrap;
+}
+.login {
+    display: flex;
+    gap: 16px;
+    align-items: end;
+    margin-bottom: 20px;
+}
+.login label {
+    flex: 1;
+}
+.login #notice {
+    flex: 1;
+    font-size: 13px;
+    color: var(--muted);
+}
+label {
+    display: block;
+    font-size: 13px;
+    color: var(--muted);
+}
+input {
+    background: #0d181c;
+    border: 1px solid #40525a;
+    border-radius: 8px;
+    color: white;
+    padding: 11px;
+    margin-top: 6px;
+    width: 100%;
+    font-size: 15px;
+}
+button {
+    border: 1px solid #44585d;
+    background: #283c42;
+    color: white;
+    border-radius: 9px;
+    padding: 12px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 650;
+}
+button:hover {
+    background: #375059;
+}
+button:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+.primary {
+    background: #3cb68d;
+    color: #08211a;
+    border-color: #3cb68d;
+}
+.primary:hover {
+    background: #67e0b4;
+}
+.layout {
+    display: grid;
+    grid-template-columns: 1.65fr 1fr;
+    gap: 20px;
+}
+.section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+.view {
+    position: relative;
+    background: #071114;
+    aspect-ratio: 4/3;
+    border-radius: 10px;
+    overflow: hidden;
+}
+.view img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+.view #no-feed {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: var(--muted);
+    pointer-events: none;
+}
+.camera-foot {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 14px;
+}
+.stop {
+    background: var(--red);
+    border: none;
+    width: 100%;
+    padding: 17px;
+    font-size: 18px;
+    letter-spacing: 0.4px;
+}
+.stop:hover {
+    background: #ff555f;
+}
+.stop span {
+    display: block;
+    font-size: 11px;
+    opacity: 0.85;
+    margin-top: 4px;
+    font-weight: 400;
+    letter-spacing: 0;
+}
+.mode-buttons,
+.brush-buttons {
+    display: flex;
+    gap: 9px;
+}
+.mode-buttons button,
+.brush-buttons button {
+    flex: 1;
+}
+#reason {
+    font-size: 13px;
+    min-height: 40px;
+    color: #c6d6db;
+}
+.hint {
+    font-size: 12px;
+    color: var(--muted);
+}
+.drive {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    margin: 12px 0 16px;
+    touch-action: none;
+}
+.drive button {
+    font-size: 22px;
+    padding: 8px;
+    user-select: none;
+    touch-action: none;
+}
+.drive small {
+    display: block;
+    font-size: 11px;
+}
+.up {
+    grid-column: 2;
+}
+.left {
+    grid-row: 2;
+    grid-column: 1;
+}
+.middle {
+    grid-row: 2;
+    grid-column: 2;
+}
+.right {
+    grid-row: 2;
+    grid-column: 3;
+}
+.down {
+    grid-row: 3;
+    grid-column: 2;
+}
+.drive button.active {
+    background: var(--accent);
+    color: #09291e;
+}
+.metrics {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin: 20px 0;
+}
+.metrics .card {
+    padding: 16px;
+}
+.metrics span {
+    display: block;
+    color: var(--muted);
+    font-size: 11px;
+}
+.metrics strong {
+    display: block;
+    font-size: 17px;
+    margin-top: 7px;
+}
+.setup summary {
+    cursor: pointer;
+    font-weight: 650;
+}
+.setup summary span {
+    font-size: 12px;
+    font-weight: 400;
+    margin-left: 12px;
+    color: var(--muted);
+}
+.setup-content {
+    padding-top: 12px;
+}
+.fields {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin: 18px 0;
+}
+.check {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin: 20px 0;
+}
+.check input {
+    width: auto;
+    margin-top: 4px;
+}
+.setup p {
+    color: var(--muted);
+    font-size: 13px;
+}
+.setup hr {
+    border: 0;
+    border-top: 1px solid var(--line);
+    margin: 24px 0;
+}
+canvas {
+    display: block;
+    width: 100%;
+    max-width: 720px;
+    height: auto;
+    background: #071114;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    cursor: crosshair;
+    touch-action: none;
+}
+.footnote {
+    color: var(--muted);
+    font-size: 12px;
+    max-width: 900px;
+    margin: 20px 4px;
+}
+.error {
+    color: #ff969b !important;
+}
+@media (max-width: 850px) {
+    header,
+    main {
+        padding: 16px;
+    }
+    .layout {
+        grid-template-columns: 1fr;
+    }
+    .login {
+        flex-wrap: wrap;
+    }
+    .login label {
+        flex-basis: 100%;
+    }
+    .metrics {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .fields {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    h1 {
+        font-size: 25px;
+    }
+    .camera-foot {
+        flex-wrap: wrap;
+    }
+}
+.imu-panel {
+    margin-bottom: 20px;
+}
+.imu-panel strong {
+    display: block;
+    margin-top: 8px;
+    font-size: 16px;
+}
+[hidden] {
+    display: none !important;
+}
+.camera-view .layout {
+    grid-template-columns: 1fr;
+}
+.camera-view.oak-view .layout {
+    grid-template-columns: 1fr 1fr;
+}
+.oak-view .view {
+    aspect-ratio: 16/9;
+}
+.imu-panel {
+    margin-top: 20px;
+}
+@media (max-width: 850px) {
+    .camera-view.oak-view .layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+.camera-view.oak-view .controls {
+    grid-column: 1/-1;
+}
+.controls label {
+    margin: 16px 0;
+}
+.camera-view .login {
+    margin-bottom: 16px;
+}
