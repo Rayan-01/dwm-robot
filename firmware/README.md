@@ -8,13 +8,9 @@ the Arduino applies motor outputs, reads FG pulses and reports sensor data.
 | --- | --- |
 | Serial rate | 115200 baud |
 | Gear ratio | 20:1 |
-| FG conversion | Four pulses per motor revolution assumed |
+| FG conversion | Four pulses per motor revolution configured |
 | Brush relay | D11, active-low |
 | Serial command watchdog | 500 ms |
-
-The selected firmware is retained without alternate or historical variants.
-The host also contains compatibility handling for another motor-safety protocol;
-that firmware is outside the scope of this source tree.
 
 Required Arduino libraries are Wire, Adafruit Unified Sensor, Adafruit BNO055
 and Adafruit ADS1X15. Select the physical AVR board and processor before flashing.

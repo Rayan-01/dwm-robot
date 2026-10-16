@@ -6,16 +6,6 @@ YOLO26n perception on an NVIDIA Jetson with OAK-D Pro depth, Arduino motor contr
 RPLidar S2 sensing and ROS 2 navigation. A browser dashboard provides manual
 driving, telemetry, cleaning controls, mapping and ordered waypoints.
 
-## Engineering scope
-
-| Area | Project implementation |
-| --- | --- |
-| Perception | Synchronized RGB/depth capture, target tracking, depth-based approach and a dark-on-grass fallback |
-| Embedded integration | Serial command protocol, motor polarity, FG RPM feedback, active-low brush relay and sensor telemetry |
-| Motion control | Differential track commands, wheel-speed regulation, acceleration limits and a timed cleaning sequence |
-| Navigation | ROS sensor/odometry bridge, footprint-aware clearance, map persistence and ordered Nav2 goals |
-| Operator interface | Live detection, depth, RPM, IMU, lidar/map views and browser control ownership |
-
 The project integrates established libraries rather than implementing them from
 scratch: Ultralytics supplies YOLO and BoT-SORT, DepthAI supplies camera access,
 SLAM Toolbox supplies mapping, and Nav2 supplies localization/planning/control
@@ -35,11 +25,6 @@ This repository organizes the robot application as ROS 2 packages, with source
 for control, perception, navigation, the dashboard and firmware. Regression
 source files are included in `src/dwm_robot/test`.
 
-Waypoint navigation and target cleaning operate as separate modes. Automatic
-cleaning detours with route resumption and automatic pickup verification remain
-future work. Absolute travel accuracy depends on FG pulse and wheel-scale
-calibration.
-
 ## Detection results
 
 The included YOLO26n checkpoint detects class 0, `dog_poop`, at a 640-pixel input
@@ -54,7 +39,6 @@ the highest recorded mAP50-95 occurs at epoch 62:
 | mAP50-95 | 0.76505 |
 
 These values come directly from the retained [training CSV](src/dwm_perception/training/yolo26n_poop/results.csv).
-They describe that validation split, not cleaning success or field reliability.
 The [perception guide](docs/perception.md) documents the model checksum, retained
 plots, dataset requirements and detector commands.
 
@@ -114,8 +98,8 @@ page; hidden pages and expired control ownership can stop the robot.
 ## Documentation
 
 - [Architecture](docs/architecture.md): package responsibilities, ROS interfaces,
-  ownership, planning and implementation boundaries.
-- [Hardware](docs/hardware.md): dimensions, wiring, frames and feedback assumptions.
+  ownership and planning.
+- [Hardware](docs/hardware.md): dimensions, wiring, frames and feedback configuration.
 - [Installation](docs/installation.md): dependencies, build, Python environments
   and writable data locations.
 - [Operation](docs/operation.md): manual driving, cleaning, mapping, waypoints

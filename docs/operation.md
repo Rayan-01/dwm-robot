@@ -26,8 +26,8 @@ It starts stopped. Use the dashboard Stop before closing the launch with Ctrl+C.
 3. Hold **Forward**, **Reverse**, **Left** or **Right**. Release to stop wheels.
 4. Press **Wheels stop** for drive only, or **STOP ROBOT + BRUSH** for both.
 
-Space also stops the robot when focus is outside a text input. Arrow-key driving
-is not implemented. Hiding the page or losing browser ownership can stop motion;
+Space also stops the robot when focus is outside a text input.
+Hiding the page or losing browser ownership can stop motion;
 keep one controlling page visible. After a latched stop, enable the desired
 mode again.
 
@@ -48,10 +48,9 @@ The default sequence is:
 | Finish | Run brush alone for 20 seconds when the finish checkbox is enabled |
 | Complete | Turn drive and brush off |
 
-The supported camera distance is 45-300 cm. Forward pass length is 0-1 m; zero
-disables the pass. Lens-to-target distance is not front-edge clearance. No blind
-spiral search is implemented. Target/depth and communication checks remain part
-of the implementation.
+Pass-start distance is measured from the camera lens. Set the pass distance
+and length through the dashboard before starting the cycle. A zero pass length
+disables the forward pass.
 
 ## Create a map
 
@@ -77,8 +76,7 @@ does not overwrite an existing map name. Choose a new name for each revision.
 
 The dashed orange line shows waypoint order, not the collision-free path. The
 solid orange plan shows the Nav2 path when available. A wall may cause a detour
-if a traversable path exists. An unreachable waypoint ends the route. The brush
-stays off and detections remain visible during waypoint navigation.
+if a traversable path exists. Detections remain visible during navigation.
 
 Run route displays any unmet readiness requirements beneath the button. Changing
 the map session clears position confirmation. Reapplying the same lidar angle

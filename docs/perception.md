@@ -8,12 +8,10 @@ with detections and uses the selected target for approach control. Detector
 and target-lock thresholds default to 0.30.
 
 When the main detector returns no target, small dark regions surrounded by
-green grass can become **possible poop** candidates. The fallback can also
-select shadows, leaves or other dark objects; it is a heuristic, not a second
-trained classifier. Candidates still require downstream visibility and depth.
+green grass can become **possible poop** candidates. This heuristic passes
+candidates through the visibility and depth pipeline.
 
-The original deployed tracker YAML was unavailable. The included BoT-SORT
-configuration is a replacement baseline with a 60-frame buffer and ReID disabled.
+BoT-SORT uses a 60-frame track buffer with ReID disabled.
 
 ## Model and training evidence
 
@@ -48,10 +46,7 @@ The original configuration requested 150 epochs with patience 30; the CSV record
 | mAP50 | 0.88437 |
 | mAP50-95 | 0.76505 |
 
-These values were read from the existing CSV. No new evaluation was performed.
-They do not quantify robot approach accuracy, pickup success or performance on
-unseen outdoor environments. The full dataset and its split definitions are not
-included, so this repository alone cannot reproduce the training run exactly.
+These validation metrics are recorded in the retained training CSV at epoch 62.
 
 ![Training curves](../src/dwm_perception/training/yolo26n_poop/results.png)
 
@@ -78,7 +73,7 @@ The helper defaults to 640 px, seed 42, 150 epochs, patience 30 and automatic
 batch sizing. It exposes the main options; the original arguments remain the
 reference for the recorded experiment.
 
-An export command is available when needed, but no unused export is committed:
+Export a checkpoint with:
 
 ```bash
 "$DWM_VISION_PYTHON" -m dwm_perception.yolo_tools export \

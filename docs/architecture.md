@@ -57,7 +57,7 @@ communication age and explicit Stop affect motion in both manual and route modes
 | `/navigate_to_pose` | `nav2_msgs/action/NavigateToPose`, bridge to Nav2 |
 
 The ROS topic name `/odometry/filtered` refers to the custom planar gyro/wheel
-filter. A robot_localization EKF is not part of this implementation.
+filter implemented in `dwm_core.navigation_core`.
 
 ## Navigation and motion tuning
 
@@ -82,17 +82,6 @@ Runtime files live under `DWM_DATA_DIR`, default `~/.local/share/dwm_robot`.
 Installed assets, weights and web files are resolved through ament package shares.
 This keeps editable settings and map writes out of the installation tree.
 
-
-## Design decisions and tradeoffs
-
-| Decision | Reason | Tradeoff |
-| --- | --- | --- |
-| One Arduino writer | Keep hardware ownership and stop behavior in one process | ROS control passes through a localhost HTTP bridge |
-| Separate mapping and navigation sessions | Avoid simultaneous SLAM/AMCL map-frame ownership | A session change requires a fresh pose confirmation |
-| Full rectangular footprint | Include the rear collection frame during turns | Narrow passages may be rejected even when the track body fits |
-| Gyro/wheel yaw fusion | Reduce reliance on magnetic heading and track-slip-prone wheel yaw | Bias and wheel-scale calibration still affect accuracy |
-| Latest-frame vision processing | Avoid a growing capture/inference queue | Frames may be dropped under load |
-| Separate cleaning and waypoint modes | Keep the demonstrated behaviors independently operable | Automatic clean-and-resume missions remain future work |
 
 ## Implementation provenance
 
