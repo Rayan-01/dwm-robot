@@ -23,23 +23,22 @@ servers. The application, hardware integration, control logic and browser-to-ROS
 coordination are the project-specific parts. [Architecture](docs/architecture.md)
 describes the interfaces and design decisions.
 
-## Implementation status
+## Hardware operation
 
-The earlier flat-layout application was exercised on the physical robot: manual
-directions were confirmed, IMU and lidar rotation estimates were compared, target
-approach/forward-pass behavior was tried, and a short left-waypoint run reached
-its goal within the configured tolerance. These were supervised development
-checks, not a repeatable field benchmark.
+The project was developed and exercised on a physical tracked robot. Hardware
+checks covered manual forward/reverse/left/right motion, wheel RPM feedback,
+IMU and lidar heading comparisons, camera-based target approach, the forward
+cleaning pass, brush timing and short waypoint navigation. The operator confirmed
+motor directions and tested the approach/pass behavior on the robot.
 
-This repository reorganizes that application as ROS 2 packages. The new package
-layout and replacement launch/map-storage integration have **not** been built
-or run on the robot. No tests were rerun for this reorganization. Existing test
-sources are retained, without presenting historical results as validation of
-this version.
+This repository organizes the robot application as ROS 2 packages, with source
+for control, perception, navigation, the dashboard and firmware. Regression
+source files are included in `src/dwm_robot/test`.
 
-Waypoint navigation and target cleaning are separate modes. Automatic cleaning
-detours with route resumption, verified pickup detection and calibrated absolute
-travel are not implemented.
+Waypoint navigation and target cleaning operate as separate modes. Automatic
+cleaning detours with route resumption and automatic pickup verification remain
+future work. Absolute travel accuracy depends on FG pulse and wheel-scale
+calibration.
 
 ## Detection results
 

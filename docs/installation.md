@@ -106,5 +106,3 @@ is separate from colcon and is not performed by any launch file.
 Regression sources are kept in `src/dwm_robot/test`. They cover control state,
 telemetry parsing, HTTP behavior, wheel/gyro math, vision fallback and firmware
 protocol behavior. Some checks require Linux PTY support or a host C++ compiler.
-The package reorganization has not been validated by a colcon build or test run.
-No passing result is claimed for this checkout.

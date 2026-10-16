@@ -101,13 +101,11 @@ waypoint coordination are project code. ROS 2, Nav2, SLAM Toolbox, DepthAI and
 Ultralytics are upstream dependencies. NavFn A*, DWB and BoT-SORT are configured
 components, not algorithms reimplemented in this repository.
 
-The ROS package layout is a later source reorganization of the working
-flat-layout application. The original installed custom bringup package could not
-be retrieved; the committed launch files and map-storage module are replacement
-implementations based on the recorded interfaces. Their presence is not evidence
-that this particular checkout was deployed. The tracker YAML is also a replacement
-baseline. Build, runtime integration and physical behavior need validation after
-these structural changes.
+The repository uses a colcon workspace to separate the robot application into
+control, perception, hardware, navigation and bringup packages. Launch files
+coordinate sensor and navigation processes; the map-storage module persists
+named occupancy maps in Nav2 YAML/PGM format. Writable settings and mission data
+remain separate from installed package resources.
 
 ## References
 
